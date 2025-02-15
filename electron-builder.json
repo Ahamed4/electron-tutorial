@@ -1,0 +1,16 @@
+{
+  "appId": "com.ahamed.electronReact",
+  "files": ["dist-react", "dist-electron"],
+  "extraResources": ["dist-electron/preload.cjs", "src/assests/**"],
+  "icon": "./desktopIcon.png",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
