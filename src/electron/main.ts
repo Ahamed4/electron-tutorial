@@ -1,15 +1,22 @@
-import { app, BrowserWindow, Tray } from "electron";
-import path from "path";
-import { isDev, ipcMainHandle } from "./util.js";
+import { app, BrowserWindow, Menu, Tray } from "electron";
+import { isDev, ipcMainHandle, ipcMainOn } from "./util.js";
 import { getStaticData, pollResources } from "./resourceManager.js";
-import { getAssetPath, getPreloadPath, getUIPath } from "./pathResolver.js";
+import { getPreloadPath, getUIPath } from "./pathResolver.js";
+import { createTray } from "./tray.js";
+import { createMenu } from "./menu.js";
+
+// Disable menu
+// Menu.setApplicationMenu(null);
 
 app.on("ready", () => {
   const mainWindow = new BrowserWindow({
     webPreferences: {
       preload: getPreloadPath(),
     },
+    // disables default system frame (dont do this if you want a proper working menu bar)
+    // frame: false,
   });
+
   if (isDev()) {
     mainWindow.loadURL("http://localhost:5123");
   } else {
@@ -21,14 +28,23 @@ app.on("ready", () => {
     return getStaticData();
   });
 
-  new Tray(
-    path.join(
-      getAssetPath(),
-      process.platform === "darwin" ? "trayIconTemplate.png" : "trayIcon.png"
-    )
-  );
+  ipcMainOn("sendFrameAction", (payload) => {
+    switch (payload) {
+      case "CLOSE":
+        mainWindow.close();
+        break;
+      case "MINIMIZE":
+        mainWindow.minimize();
+        break;
+      case "MAXIMIZE":
+        mainWindow.maximize();
+        break;
+    }
+  });
 
+  createTray(mainWindow);
   handleCloseEvents(mainWindow);
+  createMenu(mainWindow);
 });
 
 function handleCloseEvents(mainWindow: BrowserWindow) {
