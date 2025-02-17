@@ -13,8 +13,8 @@ app.on("ready", () => {
     webPreferences: {
       preload: getPreloadPath(),
     },
-    // disables default system frame (dont do this if you want a proper working menu bar)
-    // frame: false,
+    // disables default system frame (don't do this if you want a proper working menu bar)
+    frame: false,
   });
 
   if (isDev()) {

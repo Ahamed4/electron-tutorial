@@ -41,8 +41,7 @@ function App() {
 
   return (
     <>
-      {/* By default in windows, below functionality works so no need to override */}
-      {/* <header>
+      <header>
         <button
           id="close"
           onClick={() => window.electron.sendFrameAction("CLOSE")}
@@ -55,7 +54,7 @@ function App() {
           id="maximize"
           onClick={() => window.electron.sendFrameAction("MAXIMIZE")}
         />
-      </header> */}
+      </header>
       <div style={{ height: 120 }}>
         <Chart data={activeUsages} maxDataPoints={10} />
       </div>
